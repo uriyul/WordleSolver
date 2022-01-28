@@ -10,7 +10,7 @@ namespace Solver
 {
     public class Solver
     {
-        private List<string> _dictionary;
+        private string[] _dictionary;
         private bool _silent = false;
 
         public Solver(bool silent = false)
@@ -24,7 +24,7 @@ namespace Solver
 
             guessData.Words.Add(initialWord);
 
-            _dictionary = File.ReadAllLines("Resources\\dictionary.txt").Union(File.ReadAllLines("Resources\\words.txt")).ToList();
+            _dictionary = File.ReadAllLines("Resources\\dictionary.txt").Union(File.ReadAllLines("Resources\\words.txt")).ToArray();
 
             var wordle = new Wordle.Wordle();
             wordle.Initialize("Resources\\dictionary.txt", "Resources\\words.txt");
@@ -103,18 +103,25 @@ namespace Solver
         {
             UpdateTemplate(guessData);
 
+            // Find words matching the template
             Regex regex = new Regex($"^{guessData.Template[0]}{guessData.Template[1]}{guessData.Template[2]}{guessData.Template[3]}{guessData.Template[4]}$");
             var candidates = _dictionary.Where(x => regex.IsMatch(x));
+
+            // Make sure al existing letters are in the words
             if (guessData.ExistingLetters.Count > 0)
             {
                 var existingLettersArray = guessData.ExistingLetters.ToArray();
                 candidates = candidates.Where(w => guessData.ExistingLetters.All(w.Contains));
 
             }
+
+            // Screen out words we already guessed
             candidates = candidates.Where(x => !guessData.Words.Contains(x));
 
             var lettersFrequencies = new LettersFrequencies();
-            return lettersFrequencies.GetBestWord(candidates.ToList());
+            
+            // Get the best word by letters frequencies
+            return lettersFrequencies.GetBestWord(candidates.ToList(), guessData, _dictionary);
         }
 
         private void printStatus(Status status, int guessNumber)

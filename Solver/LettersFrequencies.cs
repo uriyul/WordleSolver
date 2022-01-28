@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Solver
 {
@@ -37,10 +39,21 @@ namespace Solver
             { 'z', 0.44f},
         };
 
-        public string GetBestWord(List<string> words)
+        public string GetBestWord(List<string> candidates, GuessData guessData, string[] dictionary)
         {
+            var greenLettersCount = guessData.Template.Count(x => x.Length == 1);
+
+            if (greenLettersCount >= 3 && candidates.Count > 2)
+            {
+                var newWord = GetWordOfMissingLetters(candidates, guessData, dictionary);
+                if (newWord != null)
+                {
+                    return newWord;
+                }
+            }
+
             List<Word> rankedWords = new List<Word>();
-            foreach(var word in words)
+            foreach(var word in candidates)
             {
                 rankedWords.Add(new Word { Text = word, Rank = GetRank(word) });
             }
@@ -61,6 +74,74 @@ namespace Solver
             }
 
             return rank;
+        }
+
+        private string GetWordOfMissingLetters(List<string> words, GuessData guessData, string[] dictionary)
+        {
+            var letters = GetMissingLetters(words, guessData);
+
+            // Find a word with these letters
+
+            var sb = new StringBuilder();
+            sb.Append("[");
+            foreach(var letter in letters)
+            {
+                sb.Append(letter);
+            }
+            sb.Append("]");
+
+            var candidates = GetCandidatesByRegex($"^{sb}{{5}}$", dictionary, guessData);
+
+            if(candidates.Count() == 0)
+            {
+                // Try finding a word with 4 letters
+                candidates = GetCandidatesByRegex($"^(.{sb}{{4}}|{sb}.{sb}{{3}}|{sb}{{2}}.{sb}{{2}}|{sb}{{3}}.{sb}|{sb}{{4}}.)$", dictionary, guessData);
+
+                if (candidates.Count() == 1)
+                {
+                    return candidates.FirstOrDefault();
+                }
+            }
+
+            return candidates.FirstOrDefault();
+        }
+
+        private HashSet<char> GetMissingLetters(List<string> words, GuessData guessData)
+        {
+            var letters = new HashSet<char>();
+            var notGreenIndices = new List<int>();
+
+            for (int i = 0; i < guessData.Template.Length; i++)
+            {
+                if (guessData.Template[i].Length > 1)
+                {
+                    notGreenIndices.Add(i);
+                }
+            }
+
+            foreach (var word in words)
+            {
+                foreach (int i in notGreenIndices)
+                {
+                    letters.Add(word[i]);
+                }
+            }
+
+            return letters;
+        }
+
+        private IEnumerable<string> GetCandidatesByRegex(string template, string[] dictionary, GuessData guessData)
+        {
+            var regex = new Regex(template);
+            var candidates = dictionary.Where(x => regex.IsMatch(x));
+
+            // Screen out words we already guessed
+            candidates = candidates.Where(x => !guessData.Words.Contains(x));
+
+            // Choose word with most distinct letters
+            candidates = candidates.OrderByDescending(x => x.ToHashSet().Count);
+
+            return candidates;
         }
     }
 

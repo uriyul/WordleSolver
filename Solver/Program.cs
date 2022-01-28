@@ -6,7 +6,7 @@ namespace Solver
     {
         static void Main(string[] args)
         {
-            var initialWord = "noise";
+            var initialWord = "stare";
             Console.WriteLine($"Starting with {initialWord}");
 
             RunBatch(1, 100, initialWord);
@@ -33,7 +33,7 @@ namespace Solver
             Console.WriteLine($"Elapsed time: {elapsed}");
             Console.WriteLine($"Min attempts: {min}");
             Console.WriteLine($"Max attempts: {max}");
-            Console.WriteLine($"Average attempts: {((float)sum)/((float)(endIndex-startIndex+1))}");
+            Console.WriteLine($"Average attempts: {sum / ((float)(endIndex - startIndex + 1))}");
 
         }
     }
