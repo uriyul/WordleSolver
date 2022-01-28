@@ -10,7 +10,6 @@ namespace Solver
 {
     public class Solver
     {
-        //private List<string> _words = new List<string>();
         private List<string> _dictionary;
         private bool _silent = false;
 
@@ -22,23 +21,15 @@ namespace Solver
         public (string, int) Start(string initialWord, int wordIndex)
         {
             var guessData = new GuessData();
-            //HashSet<char> missingLetters = new HashSet<char>();
-            //HashSet<char> existingLetters = new HashSet<char>();
-            //List<char>[] notHere = { new List<char>(), new List<char>(), new List<char>(), new List<char>(), new List<char>() };
 
             guessData.Words.Add(initialWord);
-            //string[] template = { @"\w", @"\w", @"\w", @"\w", @"\w" };
 
             _dictionary = File.ReadAllLines("Resources\\dictionary.txt").Union(File.ReadAllLines("Resources\\words.txt")).ToList();
 
             var wordle = new Wordle.Wordle();
             wordle.Initialize("Resources\\dictionary.txt", "Resources\\words.txt");
             var status = wordle.GetWord(guessData.Words.First(), wordIndex);
-            if (!_silent)
-            {
-                Console.Write("1. ");
-                printStatus(status);
-            }
+            printStatus(status, 1);
             Analyze(status, guessData);
 
             int i;
@@ -47,11 +38,7 @@ namespace Solver
                 string word = GetNextAttempt(guessData);
                 guessData.Words.Add(word);
                 status = wordle.GetWord(word, wordIndex);
-                if (!_silent)
-                {
-                    Console.Write($"{i}. ");
-                    printStatus(status);
-                }
+                printStatus(status, i);
                 Analyze(status, guessData);
             }
 
@@ -88,33 +75,33 @@ namespace Solver
             }
         }
 
-        private void UpdateTemplate(string[] template, HashSet<char> missingLetters, List<char>[] notHere)
+        private void UpdateTemplate(GuessData guessData)
         {
             for (int i = 0; i < 5; i++)
             {
-                if(template[i].Length == 1)
+                if(guessData.Template[i].Length == 1)
                 {
                     continue;
                 }
 
                 StringBuilder sb = new StringBuilder();
                 sb.Append("[^");
-                foreach(var letter in missingLetters)
+                foreach(var letter in guessData.MissingLetters)
                 {
                     sb.Append(letter);
                 }
-                foreach(var letter in notHere[i])
+                foreach(var letter in guessData.NotHere[i])
                 {
                     sb.Append(letter);
                 }
                 sb.Append("]");
-                template[i] = sb.ToString();
+                guessData.Template[i] = sb.ToString();
             }
         }
 
         private string GetNextAttempt(GuessData guessData)
         {
-            UpdateTemplate(guessData.Template, guessData.MissingLetters, guessData.NotHere);
+            UpdateTemplate(guessData);
 
             Regex regex = new Regex($"^{guessData.Template[0]}{guessData.Template[1]}{guessData.Template[2]}{guessData.Template[3]}{guessData.Template[4]}$");
             var candidates = _dictionary.Where(x => regex.IsMatch(x));
@@ -130,15 +117,21 @@ namespace Solver
             return lettersFrequencies.GetBestWord(candidates.ToList());
         }
 
-        private void printStatus(Status status)
+        private void printStatus(Status status, int guessNumber)
         {
+            if(_silent)
+            {
+                return;
+            }
+
             if(status.WordStatus == WordStatusEnum.NoSuchWord)
             {
                 Console.WriteLine($"There is no such word as {status.LettersStatus[0].Letter}{status.LettersStatus[1].Letter}{status.LettersStatus[2].Letter}{status.LettersStatus[3].Letter}{status.LettersStatus[4].Letter}");
                 return;
             }
 
-            for(int i=0; i<5; i++)
+            Console.Write($"{guessNumber}. ");
+            for (int i=0; i<5; i++)
             {
                 if(status.LettersStatus[i].LetterStatusEnum == LetterStatusEnum.Green)
                 {

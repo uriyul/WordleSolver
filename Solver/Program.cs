@@ -9,7 +9,7 @@ namespace Solver
             var initialWord = "noise";
             Console.WriteLine($"Starting with {initialWord}");
 
-            RunBatch(78, 78, initialWord);
+            RunBatch(1, 100, initialWord);
         }
 
         private static void RunBatch(int startIndex, int endIndex, string initialWord)
