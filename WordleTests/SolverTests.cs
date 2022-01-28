@@ -41,5 +41,19 @@ namespace WordleTests
             // assert
             Assert.IsTrue(average < 5);
         }
+
+        [TestMethod]
+        public void Solver_GuessWord21StartinWithAahed_SucceedIn6OrLess()
+        {
+            // arrange
+            var solver = new Solver.Solver(true);
+
+            // act
+            (string word, int attempts) = solver.Start("aahed", 21);
+
+            // assert
+            Assert.AreEqual("death", word);
+            Assert.IsTrue(attempts <= 6);
+        }
     }
 }

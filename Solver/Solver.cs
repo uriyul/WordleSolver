@@ -79,7 +79,7 @@ namespace Solver
         {
             for (int i = 0; i < 5; i++)
             {
-                if(guessData.Template[i].Length == 1)
+                if(guessData.Template[i].Length == 1 || guessData.MissingLetters.Count + guessData.NotHere[i].Count == 0)
                 {
                     continue;
                 }
