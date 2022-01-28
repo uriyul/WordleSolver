@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordle", "Wordle\Wordle.csproj", "{312CD225-D9E8-457D-83DA-AD4107A16B6A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordleTests", "WordleTests\WordleTests.csproj", "{D65190A6-D75A-449C-B91D-92A3D33547D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solver", "Solver\Solver.csproj", "{C8B1D882-0DEE-4F4D-85E8-7EA87C35606C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{312CD225-D9E8-457D-83DA-AD4107A16B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{312CD225-D9E8-457D-83DA-AD4107A16B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{312CD225-D9E8-457D-83DA-AD4107A16B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{312CD225-D9E8-457D-83DA-AD4107A16B6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D65190A6-D75A-449C-B91D-92A3D33547D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D65190A6-D75A-449C-B91D-92A3D33547D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D65190A6-D75A-449C-B91D-92A3D33547D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D65190A6-D75A-449C-B91D-92A3D33547D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8B1D882-0DEE-4F4D-85E8-7EA87C35606C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8B1D882-0DEE-4F4D-85E8-7EA87C35606C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8B1D882-0DEE-4F4D-85E8-7EA87C35606C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8B1D882-0DEE-4F4D-85E8-7EA87C35606C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52C66B5B-4A41-4AF0-B99B-7260E9C8E4EC}
+	EndGlobalSection
+EndGlobal
