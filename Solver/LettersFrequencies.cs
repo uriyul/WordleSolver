@@ -52,8 +52,13 @@ namespace Solver
                 }
             }
 
+            return GetBestWordByFrequency(candidates, guessData, dictionary);
+        }
+
+        private string GetBestWordByFrequency(List<string> candidates, GuessData guessData, string[] dictionary)
+        {
             List<Word> rankedWords = new List<Word>();
-            foreach(var word in candidates)
+            foreach (var word in candidates)
             {
                 rankedWords.Add(new Word { Text = word, Rank = GetRank(word) });
             }
@@ -97,10 +102,7 @@ namespace Solver
                 // Try finding a word with 4 letters
                 candidates = GetCandidatesByRegex($"^(.{sb}{{4}}|{sb}.{sb}{{3}}|{sb}{{2}}.{sb}{{2}}|{sb}{{3}}.{sb}|{sb}{{4}}.)$", dictionary, guessData);
 
-                if (candidates.Count() == 1)
-                {
-                    return candidates.FirstOrDefault();
-                }
+                return candidates.FirstOrDefault();
             }
 
             return candidates.FirstOrDefault();
